@@ -1,14 +1,27 @@
 
 
-function getResults(githubHandle,numOfResults){
-    
-    const url = `/users/${githubHandle}/repos`;
-    const options = {
+function displayResults(responseJson){
+    console.log(responseJson);
+    $("#js-results-list").empty();
+    console.log($("#js-results-list").val());
 
+    for(let i = 0; i < responseJson.length; i++){
+        $("#js-results-list").append(`<li><h3><a href=${responseJson[i].html_url}>
+        ${responseJson[i].name}</a></h3></li>`)
     };
-    console.log(url,options);
+
+    $(".js-results").removeClass("hidden");
+
+}
+
+
+function getResults(githubHandle){
     
-    fetch(url,options)
+    const url = ` https://api.github.com/users/${githubHandle}/repos`;
+
+    console.log(url);
+
+    fetch(url)
     .then(response => {if(response.ok){
         return response.json();
     }
@@ -19,17 +32,11 @@ function getResults(githubHandle,numOfResults){
 }
 
 
-   
-
-
-
 function watchForm(){
     $("#js-form").submit(function(event){
         event.preventDefault();
         const searchTerm = $("#js-search-term").val();
-        const maxResults = $("#js-max-results").val();
-        console.log(searchTerm,maxResults);
-        getResults(searchTerm,maxResults);
+        getResults(searchTerm);
 
     })
 }
